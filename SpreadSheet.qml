@@ -333,6 +333,7 @@ FocusScope {
         id: defaultSpreadSheetModel
 
         property int fontSize: 18
+        property var columnWidthList: [150, 150, 150]
 
     }
 
