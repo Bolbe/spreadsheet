@@ -7,7 +7,7 @@ FocusScope {
 
     id: spreadSheet
 
-    property var spreadSheetModel
+    property var spreadSheetModel: defaultSpreadSheetModel
     property int headerHeight: spreadSheetModel.fontSize*2.3
     property var columnWidthList: spreadSheetModel.columnWidthList
 
@@ -326,6 +326,13 @@ FocusScope {
     function abortEditor() {
         textFieldEditor.visible = false
         comboBoxEditor.visible = false
+
+    }
+
+    Item {
+        id: defaultSpreadSheetModel
+
+        property int fontSize: 18
 
     }
 
