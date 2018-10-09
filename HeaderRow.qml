@@ -93,7 +93,7 @@ ListView {
         MouseArea {
             id: headerLabelMouseArea
             anchors.fill: parent
-            onClicked: {
+            onDoubleClicked: {
                 if (!sortEnabledColumnList[index]) return // if column not sort enabled, return
                 sortingArrow.asc = (_lastSortedColumn!==index)
                 sortByColumn(index, sortingArrow.asc)
