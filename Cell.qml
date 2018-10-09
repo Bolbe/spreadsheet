@@ -23,7 +23,7 @@ Item {
         anchors.fill: parent
 
         width: parent.width
-        font.pixelSize: spreadSheetModel.fontSize
+        font.pixelSize: spreadSheet.fontSize
         padding: 5
 
         color: "black"

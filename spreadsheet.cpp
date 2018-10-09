@@ -2,16 +2,15 @@
 #include <QQmlEngine>
 #include <QDebug>
 
-SpreadSheet::SpreadSheet(): QAbstractListModel (),
-    _fontSize(16)
+SpreadSheet::SpreadSheet(): QAbstractListModel ()
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-    setColumnList(1, QStringList(), QList<int>());
+    setColumnList(1, QStringList(), QList<double>());
 }
 
 SpreadSheet::~SpreadSheet() { }
 
-void SpreadSheet::setColumnList(int columnCount, const QStringList &columnNameList, const QList<int>& columnWidthList, int leftColumnCount) {
+void SpreadSheet::setColumnList(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount) {
     if (columnCount<1) {
         qWarning() << "Number of columns out of range: " << columnCount;
         return;
@@ -49,9 +48,9 @@ void SpreadSheet::setColumnName(int index, const QString& name) {
 
 }
 
-void SpreadSheet::setColumnWidth(int index, int width) {
+void SpreadSheet::setColumnWidth(int index, double width) {  // width as multiple of fontsize
     if (index<0 || index>=_columnWidthList.count()) return;
-    if (width<20) return; // limit at 20
+    if (width<2) return; // limit at 2
     _columnWidthList[index] = width;
     //beginResetModel();
     emit columnListChanged();
@@ -101,13 +100,8 @@ void SpreadSheet::setTextAlignmentForColumn(int index, int alignment) {
     _columnTextAlignment.insert(index, alignment);
 }
 
-void SpreadSheet::setFontSize(int fontSize) {
-    _fontSize = fontSize;
-    emit fontSizeChanged(_fontSize);
-}
-
-QList<int> SpreadSheet::columnWidthList() const {
-    QList<int> list;
+QList<double> SpreadSheet::columnWidthList() const {
+    QList<double> list;
     for (int i=0; i<_columnCount; i++) {
         if (_hiddenColumnSet.contains(i)) list << 0; else list << _columnWidthList.value(i);
     }

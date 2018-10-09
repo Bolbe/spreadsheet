@@ -7,9 +7,8 @@ ListView {
 
     id: headerRow
 
-    property var columnWidth: []
+    property var columnWidthList: []
     property var sortEnabledColumnList: []
-    property int fontSize: 18
 
     signal sortByColumn(int index, bool asc)
 
@@ -21,7 +20,7 @@ ListView {
 
     delegate: Item {
 
-        width: columnWidth[index]
+        width: columnWidthList[index]*spreadSheet.fontSize
         height: headerRow.height
         visible: width > 0
 
@@ -36,7 +35,7 @@ ListView {
             id: headerLabel
             color: "white"
             text: modelData
-            font.pixelSize: fontSize*0.9
+            font.pixelSize: spreadSheet.fontSize*0.9
             anchors.fill: parent
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
@@ -60,7 +59,7 @@ ListView {
             property bool asc: true
 
             color: "white"
-            font.pixelSize: fontSize
+            font.pixelSize: spreadSheet.fontSize
             verticalAlignment: Text.AlignVCenter
             anchors.top: parent.top
             anchors.bottom: parent.bottom

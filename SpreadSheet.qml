@@ -7,8 +7,9 @@ FocusScope {
 
     id: spreadSheet
 
-    property var spreadSheetModel: defaultSpreadSheetModel
-    property int headerHeight: spreadSheetModel.fontSize*2.3
+    property int fontSize: 18
+    property var spreadSheetModel: demoSpreadSheetModel
+    property int headerHeight: spreadSheet.fontSize*2.3
     property var columnWidthList: spreadSheetModel.columnWidthList
 
     property color primaryColor: Material.color(Material.Blue)
@@ -28,14 +29,14 @@ FocusScope {
         var sum = 0;
         for (var i=0; i<columnWidthList.length; i++) {
             if (i===spreadSheetModel.leftColumnCount) sum = 0;
-            sum+=columnWidthList[i]
+            sum+=columnWidthList[i]*spreadSheet.fontSize
 
             if (i<spreadSheetModel.leftColumnCount) {
-                _leftContentWidth+=columnWidthList[i]
+                _leftContentWidth+=columnWidthList[i]*spreadSheet.fontSize
                 _leftColumnSum[i]=sum
             }
             else {
-                _rightContentWidth+=columnWidthList[i]
+                _rightContentWidth+=columnWidthList[i]*spreadSheet.fontSize
                 _rightColumnSum[i-spreadSheetModel.leftColumnCount]=sum
             }
 
@@ -69,7 +70,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            columnWidth: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
+            columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
             sortEnabledColumnList: spreadSheetModel.sortEnabledColumnList.slice(0, spreadSheetModel.leftColumnCount)
             model: spreadSheetModel.columnNameList.slice(0, spreadSheetModel.leftColumnCount)
             height: spreadSheet.headerHeight
@@ -95,7 +96,7 @@ FocusScope {
 
             model: spreadSheetModel
             columnCount: spreadSheetModel.leftColumnCount
-            columnWidth: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
+            columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
             contentWidth: parent.width
             firstIndex: 0
 
@@ -116,7 +117,7 @@ FocusScope {
             columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
             resizableColumnList: spreadSheetModel.resizableColumnList.slice(0, spreadSheetModel.leftColumnCount)
 
-            onWidthChangeRequest: spreadSheetModel.setColumnWidth(index, width)
+            onWidthChangeRequest: spreadSheetModel.setColumnWidth(index, width/spreadSheet.fontSize)
         }
 
     }
@@ -138,7 +139,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            columnWidth: spreadSheetModel.columnWidthList.slice(spreadSheetModel.leftColumnCount)
+            columnWidthList: spreadSheetModel.columnWidthList.slice(spreadSheetModel.leftColumnCount)
             sortEnabledColumnList: spreadSheetModel.sortEnabledColumnList.slice(spreadSheetModel.leftColumnCount)
             height: spreadSheet.headerHeight
             model: spreadSheetModel.columnNameList.slice(spreadSheetModel.leftColumnCount)
@@ -170,7 +171,7 @@ FocusScope {
             model: spreadSheetModel
             columnCount: spreadSheetModel.tableColumnCount-spreadSheetModel.leftColumnCount
             firstIndex: spreadSheetModel.leftColumnCount
-            columnWidth: spreadSheetModel.columnWidthList.slice(spreadSheetModel.leftColumnCount)
+            columnWidthList: spreadSheetModel.columnWidthList.slice(spreadSheetModel.leftColumnCount)
             contentWidth: _rightContentWidth
 
             onContentYChanged: { // sync both tables
@@ -197,7 +198,7 @@ FocusScope {
 
             onWidthChangeRequest: {
                 var xcontent = rightTable.contentX
-                spreadSheetModel.setColumnWidth(index+spreadSheetModel.leftColumnCount, width)
+                spreadSheetModel.setColumnWidth(index+spreadSheetModel.leftColumnCount, width/spreadSheet.fontSize)
                 rightTable.contentX = xcontent
                 rightHeaderRow.contentX = rightTable.contentX
 
@@ -246,7 +247,7 @@ FocusScope {
             anchors.fill: parent
             padding: 5
             selectByMouse: true
-            font.pixelSize: spreadSheetModel.fontSize
+            font.pixelSize: spreadSheet.fontSize
             onAccepted: {
                 textFieldEditor.visible = false
                 spreadSheetModel.requestTextChange(textFieldEditor.rowIndex,
@@ -283,7 +284,7 @@ FocusScope {
         ComboBox {
             id: comboBox
             anchors.fill: parent
-            font.pixelSize: spreadSheetModel.fontSize
+            font.pixelSize: spreadSheet.fontSize
             popup.onClosed: {
 
                 spreadSheetModel.requestComboIndexChange(comboBoxEditor.rowIndex,
@@ -329,13 +330,18 @@ FocusScope {
 
     }
 
-    Item {
-        id: defaultSpreadSheetModel
+    ListModel {
+        id: demoSpreadSheetModel
 
-        property int fontSize: 18
+        property int tableColumnCount: 3
         property var columnWidthList: [150, 150, 150]
+        property int leftColumnCount: 0
+        property var columnNameList: ["Column A", "Column B", "Column C"]
+        property var resizableColumnList: [true, true, true]
+        property var sortEnabledColumnList: [true, true, true]
 
     }
+
 
 
 }

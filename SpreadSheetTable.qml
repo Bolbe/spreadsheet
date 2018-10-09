@@ -10,8 +10,8 @@ ListView {
     property bool leftSide: false
     property int firstIndex: 0
     property int columnCount: 1
-    property var columnWidth: [ 150 ]
-    property int rowHeight: spreadSheetModel.fontSize*2.4
+    property var columnWidthList: [ 150 ]
+    property int rowHeight: spreadSheet.fontSize*2.4
 
     focus: true
 
@@ -43,7 +43,7 @@ ListView {
                     selected: spreadSheetTable.currentIndex === listViewIndex && spreadSheet._selectedColumn === index+firstIndex
                     text: comboModelList[index+firstIndex].length>0?comboModelList[index+firstIndex][comboIndexList[index+firstIndex]]:textList[index+firstIndex]
                     containsMouse: cellMouseArea.containsMouse
-                    width: columnWidth[index]
+                    width: columnWidthList[index]*spreadSheet.fontSize
                     visible: width > 0
                     height: parent.height
                     focus: selected

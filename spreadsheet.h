@@ -13,19 +13,17 @@ class SpreadSheet : public QAbstractListModel
     Q_PROPERTY(int tableColumnCount READ tableColumnCount NOTIFY tableColumnCountChanged)
     Q_PROPERTY(int leftColumnCount READ leftColumnCount NOTIFY tableColumnCountChanged)
 
-    Q_PROPERTY(QList<int> columnWidthList READ columnWidthList NOTIFY columnListChanged)
+    Q_PROPERTY(QList<double> columnWidthList READ columnWidthList NOTIFY columnListChanged)
     Q_PROPERTY(QStringList columnNameList READ columnNameList NOTIFY columnListChanged)
     Q_PROPERTY(QList<bool> resizableColumnList READ resizableColumnList NOTIFY columnListChanged)
     Q_PROPERTY(QList<bool> sortEnabledColumnList READ sortEnabledColumnList NOTIFY columnListChanged)
-
-    Q_PROPERTY(int fontSize READ fontSize NOTIFY fontSizeChanged)
 
 public:
 
     SpreadSheet();
     virtual ~SpreadSheet();
 
-    void setColumnList(int columnCount, const QStringList &columnNameList, const QList<int>& columnWidthList, int leftColumnCount=0);
+    void setColumnList(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount=0);
     void setColumnName(int index, const QString& name);
     void setColumnVisible(int index, bool visible);
     void setResizableColumn(int index, bool resizable);
@@ -38,25 +36,22 @@ public:
     void setTextAlignmentForColumn(int index, int alignment);
 
     QStringList columnNameList() const { return _columnNameList; }
-    QList<int> columnWidthList() const;
+    QList<double> columnWidthList() const;
     QList<bool> resizableColumnList() const;
     QList<bool> sortEnabledColumnList() const;
-    int fontSize() const { return _fontSize; }
 
 signals:
 
     void columnListChanged();
     void tableColumnCountChanged();
-    void fontSizeChanged(int fontSize);
 
 public slots:
 
-    void setFontSize(int fontSize);
     virtual void requestCheckedChange(int rowIndex, int columnIndex, bool checked);
     virtual void requestComboIndexChange(int rowIndex, int columnIndex, int index);
     virtual void requestTextChange(int rowIndex, int columnIndex, const QString& text);
     virtual void requestAction(int rowIndex, int columnIndex);
-    void setColumnWidth(int index, int width);
+    void setColumnWidth(int index, double width);
 
 
 protected:
@@ -111,7 +106,6 @@ private:
 
     };
 
-    int _fontSize;
     QStringList _columnNameList;
     QSet<int> _checkableColumnSet;
     QSet<int> _readOnlyColumnSet;
@@ -126,7 +120,7 @@ private:
     int _columnCount;
     int _leftColumnCount;
 
-    QList<int> _columnWidthList;
+    QList<double> _columnWidthList;
 
     QHash<int, RowModel*> _internalModel;
     RowModel* internalRow(int rowIndex);
