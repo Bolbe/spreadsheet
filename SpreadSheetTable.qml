@@ -10,7 +10,7 @@ ListView {
     property bool leftSide: false
     property int firstIndex: 0
     property int columnCount: 1
-    property var columnWidthList: [ 150 ]
+    property var columnWidthList: [ 8 ]
     property int rowHeight: spreadSheet.fontSize*2.4
 
     focus: true

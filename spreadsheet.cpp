@@ -1,11 +1,12 @@
 #include "spreadsheet.h"
 #include <QQmlEngine>
 #include <QDebug>
+#include <QSettings>
 
-SpreadSheet::SpreadSheet(): QAbstractListModel ()
+SpreadSheet::SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount): QAbstractListModel ()
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-    setColumnList(1, QStringList(), QList<double>());
+    setColumnList(columnCount, columnNameList, columnWidthList, leftColumnCount);
 }
 
 SpreadSheet::~SpreadSheet() { }
@@ -28,8 +29,13 @@ void SpreadSheet::setColumnList(int columnCount, const QStringList &columnNameLi
     _columnNameList = columnNameList.mid(0, _columnCount); // truncate if too long
     for (int c=_columnNameList.count(); c<_columnCount; c++) _columnNameList << QString("%0").arg(QChar('A'+c)); // append if too short
 
-    _columnWidthList = columnWidthList.mid(0, _columnCount);
-    for (int c=_columnWidthList.count(); c<_columnCount; c++) _columnWidthList << 150; // append if too short
+    QList<double> defaultColumnWidthList = columnWidthList.mid(0, _columnCount);
+    for (int c=defaultColumnWidthList.count(); c<_columnCount; c++) defaultColumnWidthList << 8; // append if too short
+    QVariantList defaultWidthList;
+    foreach (double width, defaultColumnWidthList) defaultWidthList << QVariant(width);
+    QSettings settings;
+    QVariantList widthList = settings.value(_columnNameList.join('|'), defaultWidthList).toList();
+    foreach (QVariant var, widthList) _columnWidthList << var.toDouble();
 
     _leftColumnCount = leftColumnCount;
     if (_leftColumnCount<0 || _leftColumnCount>_columnCount-1) _leftColumnCount = 0;
@@ -52,9 +58,12 @@ void SpreadSheet::setColumnWidth(int index, double width) {  // width as multipl
     if (index<0 || index>=_columnWidthList.count()) return;
     if (width<2) return; // limit at 2
     _columnWidthList[index] = width;
-    //beginResetModel();
     emit columnListChanged();
-    //endResetModel();
+    QVariantList list;
+    foreach (double width, _columnWidthList) list << width;
+    QSettings settings;
+    settings.setValue(_columnNameList.join('|'), list);
+
 }
 
 void SpreadSheet::setColumnVisible(int index, bool visible) {

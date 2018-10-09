@@ -20,7 +20,7 @@ class SpreadSheet : public QAbstractListModel
 
 public:
 
-    SpreadSheet();
+    SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount=0);
     virtual ~SpreadSheet();
 
     void setColumnList(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount=0);
