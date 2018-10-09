@@ -206,18 +206,21 @@ QVariant SpreadSheet::data(const QModelIndex &index, int role) const {
 }
 
 void SpreadSheet::requestCheckedChange(int rowIndex, int columnIndex, bool checked) {
+    qDebug() << "requestCheckedChange: this function must be overwritten by subclass";
     RowModel* row = internalRow(rowIndex);
     row->checkedMap.insert(columnIndex, checked);
     rowUpdated(rowIndex);
 }
 
 void SpreadSheet::requestComboIndexChange(int rowIndex, int columnIndex, int index) {
+    qDebug() << "requestComboIndexChange: this function must be overwritten by subclass";
     RowModel* row = internalRow(rowIndex);
     row->comboIndexMap.insert(columnIndex, index);
     rowUpdated(rowIndex);
 }
 
 void SpreadSheet::requestTextChange(int rowIndex, int columnIndex, const QString& text) {
+    qDebug() << "requestTextChange: this function must be overwritten by subclass";
     RowModel* row = internalRow(rowIndex);
     row->textMap.insert(columnIndex, text);
     rowUpdated(rowIndex);

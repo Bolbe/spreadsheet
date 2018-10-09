@@ -51,6 +51,7 @@ public slots:
     virtual void requestComboIndexChange(int rowIndex, int columnIndex, int index);
     virtual void requestTextChange(int rowIndex, int columnIndex, const QString& text);
     virtual void requestAction(int rowIndex, int columnIndex);
+    virtual void sortByColumn(int index, bool asc);
     void setColumnWidth(int index, double width);
 
 
@@ -66,7 +67,6 @@ protected:
     virtual bool checkable(int rowIndex, int columnIndex) const;
     virtual bool checked(int rowIndex, int columnIndex) const;
     virtual int rowCount() const = 0;
-    virtual void sortByColumn(int index, bool asc);
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
