@@ -86,14 +86,6 @@ FocusScope {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            ScrollBar.vertical: ScrollBar {
-                id: leftVerticalScrollBar
-                parent: leftTable.parent
-                anchors.top: leftTable.top
-                anchors.horizontalCenter: leftTable.right
-                anchors.bottom: leftTable.bottom
-            }
-
             model: spreadSheetModel
             columnCount: spreadSheetModel.leftColumnCount
             columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
@@ -101,7 +93,7 @@ FocusScope {
             firstIndex: 0
 
             onContentYChanged: { // sync both tables
-                if (leftTable.movingVertically || leftVerticalScrollBar.pressed) rightTable.contentY = leftTable.contentY
+                if (leftTable.movingVertically) rightTable.contentY = leftTable.contentY
             }
             onCurrentIndexChanged: {
                 rightTable.currentIndex = leftTable.currentIndex
@@ -160,6 +152,16 @@ FocusScope {
             anchors.bottom: parent.bottom
             flickableDirection: Flickable.AutoFlickIfNeeded
 
+            ScrollBar.vertical: ScrollBar {
+                id: rightVerticalScrollBar
+                parent: rightTable.parent
+                anchors.top: rightTable.top
+                anchors.horizontalCenter: _leftContentWidth>0?rightTable.left:undefined
+                anchors.right: _leftContentWidth>0?undefined:rightTable.right
+                anchors.bottom: rightTable.bottom
+            }
+
+
             ScrollBar.horizontal: ScrollBar {
                 id: rightHorizontalScrollBar
                 parent: rightTable.parent
@@ -175,7 +177,7 @@ FocusScope {
             contentWidth: _rightContentWidth
 
             onContentYChanged: { // sync both tables
-                if (rightTable.movingVertically) leftTable.contentY = rightTable.contentY
+                if (rightTable.movingVertically || rightVerticalScrollBar.pressed) leftTable.contentY = rightTable.contentY
             }
             onContentXChanged: { // sync with header
                 if (rightTable.movingHorizontally  || rightHorizontalScrollBar.pressed) rightHeaderRow.contentX = rightTable.contentX
@@ -334,7 +336,7 @@ FocusScope {
         id: demoSpreadSheetModel
 
         property int tableColumnCount: 3
-        property var columnWidthList: [150, 150, 150]
+        property var columnWidthList: [8, 8, 8]
         property int leftColumnCount: 0
         property var columnNameList: ["Column A", "Column B", "Column C"]
         property var resizableColumnList: [true, true, true]
