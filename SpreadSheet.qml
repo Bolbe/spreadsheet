@@ -8,6 +8,7 @@ FocusScope {
     id: spreadSheet
 
     property int fontSize: 18
+    property bool scrollOvershoot: true
     property var spreadSheetModel: demoSpreadSheetModel
     property int headerHeight: spreadSheet.fontSize*2.3
     property var columnWidthList: spreadSheetModel.columnWidthList
@@ -75,6 +76,7 @@ FocusScope {
             model: spreadSheetModel.columnNameList.slice(0, spreadSheetModel.leftColumnCount)
             height: spreadSheet.headerHeight
             onSortByColumn: spreadSheetModel.sortByColumn(index, asc)
+            boundsBehavior: scrollOvershoot?Flickable.DragAndOvershootBounds:Flickable.StopAtBounds
         }
 
         SpreadSheetTable {
@@ -85,7 +87,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-
+            boundsBehavior: scrollOvershoot?Flickable.DragAndOvershootBounds:Flickable.StopAtBounds
             model: spreadSheetModel
             columnCount: spreadSheetModel.leftColumnCount
             columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
@@ -139,6 +141,7 @@ FocusScope {
             onContentXChanged: {
                 if (rightHeaderRow.movingHorizontally) rightTable.contentX = rightHeaderRow.contentX
             }
+            boundsBehavior: scrollOvershoot?Flickable.DragAndOvershootBounds:Flickable.StopAtBounds
 
         }
 
@@ -151,6 +154,7 @@ FocusScope {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             flickableDirection: Flickable.AutoFlickIfNeeded
+            boundsBehavior: scrollOvershoot?Flickable.DragAndOvershootBounds:Flickable.StopAtBounds
 
             ScrollBar.vertical: ScrollBar {
                 id: rightVerticalScrollBar
