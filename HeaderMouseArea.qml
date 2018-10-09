@@ -40,8 +40,10 @@ MouseArea {
     onReleased: {
         if (_pressedIndex>-1 && _pressedX>-1) {
             var newWidth = columnWidthList[_pressedIndex]*spreadSheet.fontSize+headerMouseArea.mouseX-_pressedX
-            if (newWidth<50) newWidth = 50
-            widthChangeRequest(_pressedIndex, newWidth)
+            if (newWidth>0) {
+                if (newWidth<spreadSheet.fontSize*3) newWidth = spreadSheet.fontSize*3
+                widthChangeRequest(_pressedIndex, newWidth)
+            }
         }
         _pressedIndex = -1
         _pressedX = -1
