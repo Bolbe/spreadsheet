@@ -160,8 +160,7 @@ FocusScope {
                 id: rightVerticalScrollBar
                 parent: rightTable.parent
                 anchors.top: rightTable.top
-                anchors.horizontalCenter: _leftContentWidth>0?rightTable.left:undefined
-                anchors.right: _leftContentWidth>0?undefined:rightTable.right
+                anchors.right: _leftContentWidth>0?rightTable.left:rightTable.right
                 anchors.bottom: rightTable.bottom
             }
 
