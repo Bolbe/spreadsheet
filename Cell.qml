@@ -12,9 +12,11 @@ Item {
     property alias checked: checkbox.checked
     property alias horizontalAlignment: textLabel.horizontalAlignment
     property color bgColor: "white"
+    property bool cellHover: true
+
 
     Rectangle {
-        color: containsMouse?spreadSheet.colorShade100:bgColor
+        color: (containsMouse && cellHover)?spreadSheet.colorShade100:bgColor
         anchors.fill: parent
     }
 

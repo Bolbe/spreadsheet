@@ -17,11 +17,20 @@ class SpreadSheet : public QAbstractListModel
     Q_PROPERTY(QStringList columnNameList READ columnNameList NOTIFY columnListChanged)
     Q_PROPERTY(QList<bool> resizableColumnList READ resizableColumnList NOTIFY columnListChanged)
     Q_PROPERTY(QList<bool> sortEnabledColumnList READ sortEnabledColumnList NOTIFY columnListChanged)
+    Q_PROPERTY(int hoverType READ hoverType NOTIFY hoverTypeChanged)
 
 public:
 
     SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount=0);
     virtual ~SpreadSheet();
+
+    enum HoverVal {
+
+        NO_HOVER = 0,
+        CELL_HOVER,
+        ROW_HOVER
+
+    };
 
     void setColumnList(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount=0);
     void setColumnName(int index, const QString& name);
@@ -34,16 +43,19 @@ public:
     void setActionColumn(int index);
     void setComboModelForColumn(int index, const QStringList& comboModel);
     void setTextAlignmentForColumn(int index, int alignment);
+    void setHover(HoverVal hoverVal);
 
     QStringList columnNameList() const { return _columnNameList; }
     QList<double> columnWidthList() const;
     QList<bool> resizableColumnList() const;
     QList<bool> sortEnabledColumnList() const;
+    int hoverType() const { return _hoverType; }
 
 signals:
 
     void columnListChanged();
     void tableColumnCountChanged();
+    void hoverTypeChanged(int hoverType);
 
 public slots:
 
@@ -51,6 +63,7 @@ public slots:
     virtual void requestComboIndexChange(int rowIndex, int columnIndex, int index);
     virtual void requestTextChange(int rowIndex, int columnIndex, const QString& text);
     virtual void requestAction(int rowIndex, int columnIndex);
+    virtual void requestContextMenu(int rowIndex, int columnIndex);
     virtual void sortByColumn(int index, bool asc);
     void setColumnWidth(int index, double width);
 
@@ -121,6 +134,7 @@ private:
     int _leftColumnCount;
 
     QList<double> _columnWidthList;
+    HoverVal _hoverType;
 
     QHash<int, RowModel*> _internalModel;
     RowModel* internalRow(int rowIndex);

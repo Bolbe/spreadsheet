@@ -3,7 +3,8 @@
 #include <QDebug>
 #include <QSettings>
 
-SpreadSheet::SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount): QAbstractListModel ()
+SpreadSheet::SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount): QAbstractListModel (),
+    _hoverType(CELL_HOVER)
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     setColumnList(columnCount, columnNameList, columnWidthList, leftColumnCount);
@@ -107,6 +108,11 @@ void SpreadSheet::setComboModelForColumn(int index, const QStringList &comboMode
 
 void SpreadSheet::setTextAlignmentForColumn(int index, int alignment) {
     _columnTextAlignment.insert(index, alignment);
+}
+
+void SpreadSheet::setHover(HoverVal hoverVal) {
+    _hoverType = hoverVal;
+    emit hoverTypeChanged(_hoverType);
 }
 
 QList<double> SpreadSheet::columnWidthList() const {
@@ -237,6 +243,10 @@ void SpreadSheet::requestTextChange(int rowIndex, int columnIndex, const QString
 
 void SpreadSheet::requestAction(int rowIndex, int columnIndex) {
     qDebug() << "Requesting action for cell " << (rowIndex+1) << ":" << (columnIndex+1);
+}
+
+void SpreadSheet::requestContextMenu(int rowIndex, int columnIndex) {
+    qDebug() << "Requesting context menu for cell " << (rowIndex+1) << ":" << (columnIndex+1);
 }
 
 

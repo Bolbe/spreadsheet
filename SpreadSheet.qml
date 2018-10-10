@@ -50,6 +50,9 @@ FocusScope {
 
     property int _selectedColumn: -1
     property bool _editionInProgress: textFieldEditor.visible || comboBoxEditor.visible
+    property int _rightHoveredRowIndex: rightTable.hoveredIndexRow
+    property int _leftHoveredRowIndex: leftTable.hoveredIndexRow
+
 
     Rectangle {
         anchors.fill: parent
@@ -93,6 +96,7 @@ FocusScope {
             columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
             contentWidth: parent.width
             firstIndex: 0
+            syncHoveredIndexRow: spreadSheet._rightHoveredRowIndex
 
             onContentYChanged: { // sync both tables
                 if (leftTable.movingVertically) rightTable.contentY = leftTable.contentY
@@ -178,6 +182,7 @@ FocusScope {
             firstIndex: spreadSheetModel.leftColumnCount
             columnWidthList: spreadSheetModel.columnWidthList.slice(spreadSheetModel.leftColumnCount)
             contentWidth: _rightContentWidth
+            syncHoveredIndexRow: spreadSheet._leftHoveredRowIndex
 
             onContentYChanged: { // sync both tables
                 if (rightTable.movingVertically || rightVerticalScrollBar.pressed) leftTable.contentY = rightTable.contentY
@@ -346,8 +351,6 @@ FocusScope {
         property var sortEnabledColumnList: [true, true, true]
 
     }
-
-
 
 }
 

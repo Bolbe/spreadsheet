@@ -12,6 +12,8 @@ ListView {
     property int columnCount: 1
     property var columnWidthList: [ 8 ]
     property int rowHeight: spreadSheet.fontSize*2.4
+    property int hoveredIndexRow: -1
+    property int syncHoveredIndexRow: -1
 
     focus: true
 
@@ -51,12 +53,21 @@ ListView {
                     checked: checkedList[index+firstIndex]
                     horizontalAlignment: textAlignmentList[index+firstIndex]
                     bgColor: bgColorList[index+firstIndex]===""?"white":bgColorList[index+firstIndex]
+                    cellHover: spreadSheetModel.hoverType===1
 
                     MouseArea {
                         id: cellMouseArea
                         anchors.fill: parent
                         hoverEnabled: true
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                        onPressed: {
+                            print("Button: "+mouse.button)
+                            if (mouse.button === Qt.RightButton) spreadSheetModel.requestContextMenu(listViewIndex, index+firstIndex)
+                        }
+
                         onClicked: {
+                            if (mouse.button === Qt.RightButton) return
                             spreadSheetTable.currentIndex = listViewIndex
                             spreadSheet._selectedColumn = index+firstIndex
                             if (cell.checkable) spreadSheetModel.requestCheckedChange(listViewIndex, index+firstIndex, !cell.checked)
@@ -73,6 +84,7 @@ ListView {
                         }
 
                         onDoubleClicked: {
+                            if (mouse.button === Qt.RightButton) return
                             if (actionList[index+firstIndex]) {
                                 spreadSheetModel.requestAction(listViewIndex, index+firstIndex)
                                 return
@@ -93,6 +105,8 @@ ListView {
 
                         }
 
+
+
                     }
 
                     Keys.onLeftPressed: {
@@ -109,13 +123,52 @@ ListView {
             }
         }
 
-        Rectangle {
+        Rectangle { // thin line as row separator
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             color: "grey"
             height: 1
         }
+
+        MouseArea {  // row hover mark
+            id: rowHoverArea
+            anchors.fill: parent
+            hoverEnabled: spreadSheetModel.hoverType===2
+            propagateComposedEvents: true
+
+            onPressed: {
+                mouse.accepted = false
+            }
+
+            onHoveredChanged: {
+                if (rowHoverArea.containsMouse) spreadSheetTable.hoveredIndexRow = listViewIndex
+                else spreadSheetTable.hoveredIndexRow = -1
+            }
+
+            Item {
+                id: rowHoverMarker
+                anchors.fill: parent
+                visible: (rowHoverArea.containsMouse || spreadSheetTable.syncHoveredIndexRow==listViewIndex) && spreadSheetModel.hoverType===2
+
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    color: spreadSheet.primaryColor
+                    height: 3
+                }
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    color: spreadSheet.primaryColor
+                    height: 3
+                }
+            }
+
+        }
+
 
     }
 
