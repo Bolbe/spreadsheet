@@ -11,7 +11,9 @@ FocusScope {
     property bool scrollOvershoot: true
     property var spreadSheetModel: demoSpreadSheetModel
     property int headerHeight: spreadSheet.fontSize*2.3
+    property int rowHeight: spreadSheet.fontSize*2.4
     property var columnWidthList: spreadSheetModel.columnWidthList
+    property string hoverMark: "cell" // cell, row, none
 
     property color primaryColor: Material.color(Material.Blue)
     property color colorShade100: Material.color(Material.Blue, Material.Shade100)
@@ -96,6 +98,7 @@ FocusScope {
             columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
             contentWidth: parent.width
             firstIndex: 0
+            rowHeight: spreadSheet.rowHeight
             syncHoveredIndexRow: spreadSheet._rightHoveredRowIndex
 
             onContentYChanged: { // sync both tables
@@ -159,6 +162,7 @@ FocusScope {
             anchors.bottom: parent.bottom
             flickableDirection: Flickable.AutoFlickIfNeeded
             boundsBehavior: scrollOvershoot?Flickable.DragAndOvershootBounds:Flickable.StopAtBounds
+            rowHeight: spreadSheet.rowHeight
 
             ScrollBar.vertical: ScrollBar {
                 id: rightVerticalScrollBar

@@ -3,8 +3,7 @@
 #include <QDebug>
 #include <QSettings>
 
-SpreadSheet::SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount): QAbstractListModel (),
-    _hoverType(CELL_HOVER)
+SpreadSheet::SpreadSheet(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount): QAbstractListModel ()
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     setColumnList(columnCount, columnNameList, columnWidthList, leftColumnCount);
@@ -62,18 +61,22 @@ void SpreadSheet::setColumnWidth(int index, double width) {  // width as multipl
     emit columnListChanged();
     QVariantList list;
     foreach (double width, _columnWidthList) list << width;
+    qDebug() << "Column width: " << _columnWidthList;
     QSettings settings;
     settings.setValue(_columnNameList.join('|'), list);
 
 }
 
-void SpreadSheet::setColumnVisible(int index, bool visible) {
-    if (index<0 || index>=_columnWidthList.count()) return;
-    if (visible) _hiddenColumnSet.remove(index);
-    else _hiddenColumnSet.insert(index);
+void SpreadSheet::setColumnListVisible(QList<int> columnList, bool visible) {
     beginResetModel();
+    foreach (int index, columnList) {
+        if (index<0 || index>=_columnWidthList.count()) continue;
+        if (visible) _hiddenColumnSet.remove(index);
+        else _hiddenColumnSet.insert(index);
+    }
     emit columnListChanged();
     endResetModel();
+
 }
 
 void SpreadSheet::setResizableColumn(int index, bool resizable) {
@@ -108,11 +111,6 @@ void SpreadSheet::setComboModelForColumn(int index, const QStringList &comboMode
 
 void SpreadSheet::setTextAlignmentForColumn(int index, int alignment) {
     _columnTextAlignment.insert(index, alignment);
-}
-
-void SpreadSheet::setHover(HoverVal hoverVal) {
-    _hoverType = hoverVal;
-    emit hoverTypeChanged(_hoverType);
 }
 
 QList<double> SpreadSheet::columnWidthList() const {

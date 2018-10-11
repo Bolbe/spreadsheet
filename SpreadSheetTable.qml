@@ -53,7 +53,7 @@ ListView {
                     checked: checkedList[index+firstIndex]
                     horizontalAlignment: textAlignmentList[index+firstIndex]
                     bgColor: bgColorList[index+firstIndex]===""?"white":bgColorList[index+firstIndex]
-                    cellHover: spreadSheetModel.hoverType===1
+                    cellHover: spreadSheet.hoverMark==="cell"
 
                     MouseArea {
                         id: cellMouseArea
@@ -62,7 +62,6 @@ ListView {
                         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                         onPressed: {
-                            print("Button: "+mouse.button)
                             if (mouse.button === Qt.RightButton) spreadSheetModel.requestContextMenu(listViewIndex, index+firstIndex)
                         }
 
@@ -134,7 +133,7 @@ ListView {
         MouseArea {  // row hover mark
             id: rowHoverArea
             anchors.fill: parent
-            hoverEnabled: spreadSheetModel.hoverType===2
+            hoverEnabled: spreadSheet.hoverMark==="row"
             propagateComposedEvents: true
 
             onPressed: {
@@ -149,7 +148,7 @@ ListView {
             Item {
                 id: rowHoverMarker
                 anchors.fill: parent
-                visible: (rowHoverArea.containsMouse || spreadSheetTable.syncHoveredIndexRow==listViewIndex) && spreadSheetModel.hoverType===2
+                visible: (rowHoverArea.containsMouse || spreadSheetTable.syncHoveredIndexRow==listViewIndex) && spreadSheet.hoverMark==="row"
 
                 Rectangle {
                     anchors.top: parent.top
