@@ -7,16 +7,15 @@ Item {
     id: cell
     property alias text: textLabel.text
     property bool selected: false
-    property bool containsMouse: false
+    property bool hovered: false
     property bool checkable: false
     property alias checked: checkbox.checked
     property alias horizontalAlignment: textLabel.horizontalAlignment
     property color bgColor: "white"
-    property bool cellHover: true
 
 
     Rectangle {
-        color: (containsMouse && cellHover)?spreadSheet.colorShade100:bgColor
+        color: hovered?spreadSheet.colorShade100:bgColor
         anchors.fill: parent
     }
 

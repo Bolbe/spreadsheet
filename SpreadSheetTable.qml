@@ -15,6 +15,9 @@ ListView {
     property int hoveredIndexRow: -1
     property int syncHoveredIndexRow: -1
 
+    property int _hoveredIndexColumnX1: -1
+    property int _hoveredIndexColumnX2: -1
+
     focus: true
 
     snapMode: ListView.SnapToItem
@@ -44,7 +47,7 @@ ListView {
 
                     selected: spreadSheetTable.currentIndex === listViewIndex && spreadSheet._selectedColumn === index+firstIndex
                     text: comboModelList[index+firstIndex].length>0?comboModelList[index+firstIndex][comboIndexList[index+firstIndex]]:textList[index+firstIndex]
-                    containsMouse: cellMouseArea.containsMouse
+                    hovered: cellMouseArea.containsMouse && spreadSheet.cellHighlightHovering
                     width: columnWidthList[index]*spreadSheet.fontSize
                     visible: width > 0
                     height: parent.height
@@ -53,13 +56,28 @@ ListView {
                     checked: checkedList[index+firstIndex]
                     horizontalAlignment: textAlignmentList[index+firstIndex]
                     bgColor: bgColorList[index+firstIndex]===""?"white":bgColorList[index+firstIndex]
-                    cellHover: spreadSheet.hoverMark==="cell"
+
 
                     MouseArea {
                         id: cellMouseArea
                         anchors.fill: parent
                         hoverEnabled: true
                         acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                        onHoveredChanged: {
+                            if (cellMouseArea.containsMouse) {
+                                spreadSheetTable.hoveredIndexRow = listViewIndex
+                                if (index+firstIndex>=spreadSheet.firstColumnHighlightHovering && index+firstIndex<=spreadSheet.lastColumnHighlightHovering) {
+                                    spreadSheetTable._hoveredIndexColumnX1 = cell.x-spreadSheetTable.contentX
+                                    spreadSheetTable._hoveredIndexColumnX2 = spreadSheetTable._hoveredIndexColumnX1+cell.width
+                                }
+                            }
+                            else {
+                                spreadSheetTable.hoveredIndexRow = -1
+                                spreadSheetTable._hoveredIndexColumnX1 = -1
+                                spreadSheetTable._hoveredIndexColumnX2 = -1
+                            }
+                        }
 
                         onPressed: {
                             if (mouse.button === Qt.RightButton) spreadSheetModel.requestContextMenu(listViewIndex, index+firstIndex)
@@ -130,44 +148,27 @@ ListView {
             height: 1
         }
 
-        MouseArea {  // row hover mark
-            id: rowHoverArea
+
+        Item {  // highlight row hover
             anchors.fill: parent
-            hoverEnabled: spreadSheet.hoverMark==="row"
-            propagateComposedEvents: true
+            visible: (spreadSheetTable.hoveredIndexRow==listViewIndex || spreadSheetTable.syncHoveredIndexRow==listViewIndex) && spreadSheet.rowHighlightHovering
 
-            onPressed: {
-                mouse.accepted = false
+            Rectangle {
+                anchors.top: parent.top
+                anchors.topMargin: -1
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: spreadSheet.primaryColor
+                height: 3
             }
-
-            onHoveredChanged: {
-                if (rowHoverArea.containsMouse) spreadSheetTable.hoveredIndexRow = listViewIndex
-                else spreadSheetTable.hoveredIndexRow = -1
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: spreadSheet.primaryColor
+                height: 3
             }
-
-            Item {
-                id: rowHoverMarker
-                anchors.fill: parent
-                visible: (rowHoverArea.containsMouse || spreadSheetTable.syncHoveredIndexRow==listViewIndex) && spreadSheet.hoverMark==="row"
-
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    color: spreadSheet.primaryColor
-                    height: 3
-                }
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    color: spreadSheet.primaryColor
-                    height: 3
-                }
-            }
-
         }
-
 
     }
 
@@ -184,5 +185,21 @@ ListView {
 
     }
 
+    Rectangle {
+        x: spreadSheetTable._hoveredIndexColumnX1
+        visible: x>-1
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        color: "grey"
+        width: 1
+    }
+    Rectangle {
+        x: spreadSheetTable._hoveredIndexColumnX2
+        visible: x>-1
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        color: "grey"
+        width: 1
+    }
 
 }

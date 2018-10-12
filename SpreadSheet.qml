@@ -13,7 +13,10 @@ FocusScope {
     property int headerHeight: spreadSheet.fontSize*2.3
     property int rowHeight: spreadSheet.fontSize*2.4
     property var columnWidthList: spreadSheetModel.columnWidthList
-    property string hoverMark: "cell" // cell, row, none
+    property bool cellHighlightHovering: true
+    property bool rowHighlightHovering: false
+    property int firstColumnHighlightHovering: -1
+    property int lastColumnHighlightHovering: -1
 
     property color primaryColor: Material.color(Material.Blue)
     property color colorShade100: Material.color(Material.Blue, Material.Shade100)
