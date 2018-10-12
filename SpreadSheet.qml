@@ -12,7 +12,6 @@ FocusScope {
     property var spreadSheetModel: demoSpreadSheetModel
     property int headerHeight: spreadSheet.fontSize*2.3
     property int rowHeight: spreadSheet.fontSize*2.4
-    property var columnWidthList: spreadSheetModel.columnWidthList
     property bool cellHighlightHovering: true
     property bool rowHighlightHovering: false
     property int firstColumnHighlightHovering: -1
@@ -22,6 +21,7 @@ FocusScope {
     property color colorShade100: Material.color(Material.Blue, Material.Shade100)
     property color colorShade700: Material.color(Material.Blue, Material.Shade700)
 
+    property var columnWidthList: spreadSheetModel.columnWidthList
     property int _leftContentWidth: 0
     property int _rightContentWidth: 0
     property var _leftColumnSum: []
@@ -317,9 +317,9 @@ FocusScope {
     function popupTextFieldEditor(table, x, y, width, height,
                                   rowIndex, columnIndex, text) {
         textFieldEditor.x = table*leftSpreadSheet.width+x+2
-        textFieldEditor.y = y+headerHeight+4
+        textFieldEditor.y = y+rowHeight+4
         textFieldEditor.width = width
-        textFieldEditor.height = height
+        textFieldEditor.height = height+5
         textFieldEditor.visible = true
         textFieldEditor.rowIndex = rowIndex
         textFieldEditor.columnIndex = columnIndex
