@@ -27,12 +27,14 @@ public:
     void setColumnList(int columnCount, const QStringList &columnNameList, const QList<double>& columnWidthList, int leftColumnCount=0);
     void setColumnName(int index, const QString& name);
     void setColumnListVisible(QList<int> columnList, bool visible);
-    void setResizableColumn(int index, bool resizable);
-    void setSortEnabledColumn(int index, bool sortEnabled);
-    void setColumnBgColor(int index, const QString& color);
-    void setCheckableColumn(int index);
-    void setReadOnlyColumn(int index);
-    void setActionColumn(int index);
+    void setResizableForColumn(int index, bool resizable);
+    void setSortEnabledForColumn(int index, bool sortEnabled);
+    void setBgColorForColumn(int index, const QString& color);
+    void setTextColorForColumn(int index, const QString& color);
+    void setFontFamilyForColumn(int index, const QString& fontFamily);
+    void setCheckableForColumn(int index);
+    void setReadOnlyForColumn(int index);
+    void setActionEnabledForColumn(int index);
     void setComboModelForColumn(int index, const QStringList& comboModel);
     void setTextAlignmentForColumn(int index, int alignment);
 
@@ -61,8 +63,10 @@ protected:
 
     virtual QString text(int rowIndex, int columnIndex) const;
     virtual QString bgColor(int rowIndex, int columnIndex) const;
+    virtual QString textColor(int rowIndex, int columnIndex) const;
     virtual int comboIndex(int rowIndex, int columnIndex) const;
     virtual int textAlignment(int rowIndex, int columnIndex) const;
+    virtual QString fontFamily(int rowIndex, int columnIndex) const;
     virtual QStringList comboModel(int rowIndex, int columnIndex) const;
     virtual bool readOnly(int rowIndex, int columnIndex) const;
     virtual bool action(int rowIndex, int columnIndex) const;
@@ -92,7 +96,9 @@ private:
         comboIndexList,
         comboModelList,
         bgColorList,
+        textColorList,
         textAlignmentList,
+        fontFamilyList,
         actionList,  // booleans. if true, then call action method on double click instead of opening editor.
 
     };
@@ -115,6 +121,8 @@ private:
     QHash<int, QStringList> _columnComboModel;
     QHash<int, int> _columnTextAlignment;
     QHash<int, QString> _columnBgColor;
+    QHash<int, QString> _columnTextColor;
+    QHash<int, QString> _columnFontFamily;
     QSet<int> _hiddenColumnSet;
     QHash<int, bool> _resizableColumn;
     QHash<int, bool> _sortEnabledColumn;

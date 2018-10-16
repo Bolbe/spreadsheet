@@ -79,29 +79,33 @@ void SpreadSheet::setColumnListVisible(QList<int> columnList, bool visible) {
 
 }
 
-void SpreadSheet::setResizableColumn(int index, bool resizable) {
+void SpreadSheet::setResizableForColumn(int index, bool resizable) {
     _resizableColumn.insert(index, resizable);
     emit columnListChanged();
 }
 
-void SpreadSheet::setSortEnabledColumn(int index, bool sortEnabled) {
+void SpreadSheet::setSortEnabledForColumn(int index, bool sortEnabled) {
     _sortEnabledColumn.insert(index, sortEnabled);
     emit columnListChanged();
 }
 
-void SpreadSheet::setColumnBgColor(int index, const QString &color) {
+void SpreadSheet::setBgColorForColumn(int index, const QString &color) {
     _columnBgColor.insert(index, color);
 }
 
-void SpreadSheet::setCheckableColumn(int index) {
+void SpreadSheet::setFontFamilyForColumn(int index, const QString &fontFamily) {
+    _columnFontFamily.insert(index, fontFamily);
+}
+
+void SpreadSheet::setCheckableForColumn(int index) {
     _checkableColumnSet.insert(index);
 }
 
-void SpreadSheet::setReadOnlyColumn(int index) {
+void SpreadSheet::setReadOnlyForColumn(int index) {
     _readOnlyColumnSet.insert(index);
 }
 
-void SpreadSheet::setActionColumn(int index) {
+void SpreadSheet::setActionEnabledForColumn(int index) {
     _actionColumnSet.insert(index);
 }
 
@@ -135,6 +139,7 @@ QList<bool> SpreadSheet::sortEnabledColumnList() const {
 
 
 QHash<int, QByteArray> SpreadSheet::roleNames() const {
+
     QHash<int, QByteArray> hash;
     hash.insert(textList, "textList");
     hash.insert(readOnlyList, "readOnlyList");
@@ -145,7 +150,8 @@ QHash<int, QByteArray> SpreadSheet::roleNames() const {
     hash.insert(comboModelList, "comboModelList");
     hash.insert(checkableList, "checkableList");
     hash.insert(bgColorList, "bgColorList");
-
+    hash.insert(textColorList, "textColorList");
+    hash.insert(fontFamilyList, "fontFamilyList");
     return hash;
 }
 
@@ -185,7 +191,11 @@ QVariant SpreadSheet::data(const QModelIndex &index, int role) const {
         }
         case comboModelList: {
             QVariantList list;
-            for (int i=0; i<_columnCount; i++) list << QVariant(comboModel(index.row(), i));
+            for (int i=0; i<_columnCount; i++) {
+                QStringList modelList = comboModel(index.row(), i);
+                if (modelList.isEmpty()) modelList = _columnComboModel.value(i);
+                list << modelList;
+            }
             return QVariant(list);
         }
         case checkableList: {
@@ -209,6 +219,24 @@ QVariant SpreadSheet::data(const QModelIndex &index, int role) const {
                 QString color = bgColor(index.row(), i);
                 if (color.isEmpty()) color = _columnBgColor.value(i);
                 list << color;
+            }
+            return QVariant(list);
+        }
+        case textColorList: {
+            QStringList list;
+            for (int i=0; i<_columnCount; i++) {
+                QString color = textColor(index.row(), i);
+                if (color.isEmpty()) color = _columnTextColor.value(i);
+                list << color;
+            }
+            return QVariant(list);
+        }
+        case fontFamilyList: {
+            QStringList list;
+            for (int i=0; i<_columnCount; i++) {
+                QString font = fontFamily(index.row(), i);
+                if (font.isEmpty()) font = _columnFontFamily.value(i);
+                list << font;
             }
             return QVariant(list);
         }
@@ -258,6 +286,10 @@ QString SpreadSheet::bgColor(int rowIndex, int columnIndex) const {
     return QString();
 }
 
+QString SpreadSheet::textColor(int rowIndex, int columnIndex) const {
+    return QString();
+}
+
 int SpreadSheet::comboIndex(int rowIndex, int columnIndex) const {
     RowModel* row = _internalModel.value(rowIndex, nullptr);
     if (row==nullptr) return 0;
@@ -266,6 +298,10 @@ int SpreadSheet::comboIndex(int rowIndex, int columnIndex) const {
 
 int SpreadSheet::textAlignment(int rowIndex, int columnIndex) const {
     return _columnTextAlignment.value(columnIndex, 0);
+}
+
+QString SpreadSheet::fontFamily(int rowIndex, int columnIndex) const {
+    return QString();
 }
 
 QStringList SpreadSheet::comboModel(int rowIndex, int columnIndex) const {
