@@ -147,7 +147,7 @@ FocusScope {
             sortEnabledColumnList: spreadSheetModel.sortEnabledColumnList.slice(spreadSheetModel.leftColumnCount)
             height: spreadSheet.headerHeight
             model: spreadSheetModel.columnNameList.slice(spreadSheetModel.leftColumnCount)
-            onSortByColumn: spreadSheetModel.sortByColumn(index, asc)
+            onSortByColumn: spreadSheetModel.sortByColumn(index+spreadSheetModel.leftColumnCount, asc)
             onContentXChanged: {
                 if (rightHeaderRow.movingHorizontally) rightTable.contentX = rightHeaderRow.contentX
             }
