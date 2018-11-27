@@ -12,7 +12,7 @@ ListView {
 
     signal sortByColumn(int index, bool asc)
 
-    property int _currentSortedColumn: -1
+    property int _lastSortedColumn: -1
 
     height: 50
     orientation: ListView.Horizontal
@@ -56,7 +56,7 @@ ListView {
         Text {
             id: sortingArrow
 
-            property bool asc: false
+            property bool asc: true
 
             color: "white"
             font.pixelSize: spreadSheet.fontSize
@@ -65,7 +65,7 @@ ListView {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.rightMargin: 10
-            text: _currentSortedColumn!==index?"\u25B6":sortingArrow.asc?"\u25B2":"\u25BC"
+            text: sortingArrow.asc?"\u25BC":"\u25B2"
             visible: false
 
             onOpacityChanged: if (opacity==0) visible = false
@@ -82,8 +82,8 @@ ListView {
             SequentialAnimation {
                 id: sortingArrowAnim
 
-                PauseAnimation { duration: 1000 }
-                NumberAnimation { target: sortingArrow; property: "opacity"; to:0; duration:200 }
+                PauseAnimation { duration: 2000 }
+                NumberAnimation { target: sortingArrow; property: "opacity"; to:0; duration:300 }
 
             }
 
@@ -93,17 +93,12 @@ ListView {
         MouseArea {
             id: headerLabelMouseArea
             anchors.fill: parent
-            onClicked: {
-                if (!sortEnabledColumnList[index]) return // if column not sort enabled, return
-                sortingArrow.visible = true
-            }
-
             onDoubleClicked: {
                 if (!sortEnabledColumnList[index]) return // if column not sort enabled, return
-                sortingArrow.asc = !sortingArrow.asc
+                sortingArrow.asc = (_lastSortedColumn!==index)
                 sortByColumn(index, sortingArrow.asc)
                 sortingArrow.visible = true
-                _currentSortedColumn = index
+                if (sortingArrow.asc) _lastSortedColumn = index; else _lastSortedColumn = -1
             }
         }
 

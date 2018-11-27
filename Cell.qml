@@ -12,6 +12,8 @@ Item {
     property alias checked: checkbox.checked
     property alias horizontalAlignment: textLabel.horizontalAlignment
     property color bgColor: "white"
+    property color textColor: textLabel.color
+    property alias fontFamily: textLabel.font.family
 
 
     Rectangle {
@@ -27,7 +29,6 @@ Item {
         font.pixelSize: spreadSheet.fontSize
         padding: 5
 
-        color: "black"
         verticalAlignment: Text.AlignVCenter
         visible: !checkbox.visible
         elide: Text.ElideRight

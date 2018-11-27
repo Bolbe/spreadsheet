@@ -56,7 +56,8 @@ ListView {
                     checked: checkedList[index+firstIndex]
                     horizontalAlignment: textAlignmentList[index+firstIndex]
                     bgColor: bgColorList[index+firstIndex]===""?"white":bgColorList[index+firstIndex]
-
+                    textColor: textColorList[index+firstIndex]===""?"black":textColorList[index+firstIndex]
+                    fontFamily: fontFamilyList[index+firstIndex]===""?"Helvetica":fontFamilyList[index+firstIndex]
 
                     MouseArea {
                         id: cellMouseArea
