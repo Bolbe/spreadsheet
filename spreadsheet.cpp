@@ -330,6 +330,45 @@ void SpreadSheet::sortByColumn(int index, bool asc) {
     qDebug() << "Sorting by column is not implemented by subclass";
 }
 
+void SpreadSheet::selectRow(int index) {
+    if (index>=rowCount()) index = rowCount()-1;
+    if (index<0) index = 0;
+    if (_selectedRowSet.contains(index)) _selectedRowSet.remove(index); else _selectedRowSet.insert(index);
+    QStringList list;
+    foreach (int i, _selectedRowSet) list << QString::number(i);
+    qDebug() << "Selected rows: " << list.join(",");
+    rowUpdated(index);
+}
+
+void SpreadSheet::selectRowRange(int startIndex, int endIndex) {
+    if (startIndex>=rowCount()) startIndex = rowCount()-1;
+    if (startIndex<0) startIndex=0;
+    if (endIndex>=rowCount()) endIndex = rowCount()-1;
+    if (endIndex<0) endIndex=0;
+
+    int a = startIndex;
+    int b = endIndex;
+    if (a>b) {
+        a = endIndex;
+        b = startIndex;
+    }
+    for (int i=a; i<=b; i++) {
+        _selectedRowSet.insert(i);
+        rowUpdated(i);
+    }
+    QStringList list;
+    foreach (int i, _selectedRowSet) list << QString::number(i);
+    qDebug() << "Selected rows: " << list.join(",");
+
+}
+
+void SpreadSheet::clearRowSelection() {
+    if (_selectedRowSet.isEmpty()) return;
+    QSet<int> copySet = _selectedRowSet;
+    _selectedRowSet.clear();
+    foreach (int i, copySet) rowUpdated(i);
+}
+
 SpreadSheet::RowModel* SpreadSheet::internalRow(int rowIndex) {
     RowModel* row = _internalModel.value(rowIndex, nullptr);
     if (row==nullptr) {

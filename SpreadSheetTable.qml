@@ -86,6 +86,19 @@ ListView {
 
                         onClicked: {
                             if (mouse.button === Qt.RightButton) return
+                            if (mouse.button === Qt.LeftButton) {
+                                if (mouse.modifiers & Qt.ControlModifier) {
+                                    spreadSheetModel.selectRow(listViewIndex)
+                                }
+                                else if (mouse.modifiers & Qt.ShiftModifier) {
+                                    spreadSheetModel.selectRowRange(spreadSheetTable.currentIndex, listViewIndex)
+                                }
+                                else {
+                                    spreadSheetModel.clearRowSelection()
+                                }
+                            }
+
+
                             spreadSheetTable.currentIndex = listViewIndex
                             spreadSheet._selectedColumn = index+firstIndex
                             if (cell.checkable) spreadSheetModel.requestCheckedChange(listViewIndex, index+firstIndex, !cell.checked)

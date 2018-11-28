@@ -56,6 +56,9 @@ public slots:
     virtual void requestAction(int rowIndex, int columnIndex);
     virtual void requestContextMenu(int rowIndex, int columnIndex);
     virtual void sortByColumn(int index, bool asc);
+    void selectRow(int index);
+    void selectRowRange(int startIndex, int endIndex);
+    void clearRowSelection();
     void setColumnWidth(int index, double width);
 
 
@@ -83,6 +86,8 @@ protected:
 
     int leftColumnCount() const { return _leftColumnCount; }
     int tableColumnCount() const { return _columnCount; }
+
+    bool rowSelected(int index) const { return _selectedRowSet.contains(index); }
 
 
 private:
@@ -126,6 +131,7 @@ private:
     QSet<int> _hiddenColumnSet;
     QHash<int, bool> _resizableColumn;
     QHash<int, bool> _sortEnabledColumn;
+    QSet<int> _selectedRowSet;
 
     int _columnCount;
     int _leftColumnCount;
