@@ -47,6 +47,7 @@ signals:
 
     void columnListChanged();
     void tableColumnCountChanged();
+    void popupContextMenu();
 
 public slots:
 
@@ -54,8 +55,8 @@ public slots:
     virtual void requestComboIndexChange(int rowIndex, int columnIndex, int index);
     virtual void requestTextChange(int rowIndex, int columnIndex, const QString& text);
     virtual void requestAction(int rowIndex, int columnIndex);
-    virtual void requestContextMenu(int rowIndex, int columnIndex);
     virtual void sortByColumn(int index, bool asc);
+    void requestContextMenu(int rowIndex, int columnIndex);
     void selectRow(int index);
     void selectRowRange(int startIndex, int endIndex);
     void clearRowSelection();
@@ -71,6 +72,7 @@ protected:
     virtual int textAlignment(int rowIndex, int columnIndex) const;
     virtual QString fontFamily(int rowIndex, int columnIndex) const;
     virtual QStringList comboModel(int rowIndex, int columnIndex) const;
+    virtual QStringList contextMenuList(int rowIndex, int columnIndex) const;
     virtual bool readOnly(int rowIndex, int columnIndex) const;
     virtual bool action(int rowIndex, int columnIndex) const;
     virtual bool checkable(int rowIndex, int columnIndex) const;

@@ -273,6 +273,9 @@ void SpreadSheet::requestAction(int rowIndex, int columnIndex) {
 
 void SpreadSheet::requestContextMenu(int rowIndex, int columnIndex) {
     qDebug() << "Requesting context menu for cell " << (rowIndex+1) << ":" << (columnIndex+1);
+    QStringList menuList = contextMenuList(rowIndex, columnIndex);
+    if (menuList.isEmpty()) return;
+    emit popupContextMenu();
 }
 
 
@@ -306,6 +309,10 @@ QString SpreadSheet::fontFamily(int rowIndex, int columnIndex) const {
 
 QStringList SpreadSheet::comboModel(int rowIndex, int columnIndex) const {
     return _columnComboModel.value(columnIndex);
+}
+
+QStringList SpreadSheet::contextMenuList(int rowIndex, int columnIndex) const {
+    return QStringList();
 }
 
 bool SpreadSheet::readOnly(int rowIndex, int columnIndex) const {

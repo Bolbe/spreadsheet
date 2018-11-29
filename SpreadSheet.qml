@@ -313,6 +313,21 @@ FocusScope {
 
     }
 
+    Menu {
+        id: contextMenu
+        MenuItem { text: "OptionA" }
+        MenuItem { text: "OptionB" }
+
+
+    }
+
+    Connections {
+        target: spreadSheetModel
+        onPopupContextMenu: {
+            print("Pop up context menu")
+            contextMenu.popup()
+        }
+    }
 
     function popupTextFieldEditor(table, x, y, width, height,
                                   rowIndex, columnIndex, text) {

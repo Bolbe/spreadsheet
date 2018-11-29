@@ -81,7 +81,10 @@ ListView {
                         }
 
                         onPressed: {
-                            if (mouse.button === Qt.RightButton) spreadSheetModel.requestContextMenu(listViewIndex, index+firstIndex)
+                            if (mouse.button === Qt.RightButton) {
+                                spreadSheetModel.requestContextMenu(listViewIndex, index+firstIndex)
+
+                            }
                         }
 
                         onClicked: {
