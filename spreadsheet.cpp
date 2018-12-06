@@ -274,8 +274,11 @@ void SpreadSheet::requestAction(int rowIndex, int columnIndex) {
 void SpreadSheet::requestContextMenu(int rowIndex, int columnIndex) {
     qDebug() << "Requesting context menu for cell " << (rowIndex+1) << ":" << (columnIndex+1);
     QStringList menuList = contextMenuList(rowIndex, columnIndex);
-    if (menuList.isEmpty()) return;
-    emit popupContextMenu();
+    if (menuList.isEmpty()) {
+        qDebug() << "No context menu set";
+        return;
+    }
+    emit popupContextMenu(rowIndex, columnIndex, menuList);
 }
 
 
@@ -335,6 +338,10 @@ bool SpreadSheet::checked(int rowIndex, int columnIndex) const {
 
 void SpreadSheet::sortByColumn(int index, bool asc) {
     qDebug() << "Sorting by column is not implemented by subclass";
+}
+
+void SpreadSheet::contextMenuAction(int rowIndex, int columnIndex, int menuIndex) {
+    qDebug() << "Context menu row " << rowIndex << " column " << columnIndex << " menuIndex: " << menuIndex;
 }
 
 void SpreadSheet::selectRow(int index) {

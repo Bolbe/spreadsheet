@@ -315,16 +315,28 @@ FocusScope {
 
     Menu {
         id: contextMenu
-        MenuItem { text: "OptionA" }
-        MenuItem { text: "OptionB" }
+        property alias contextMenuList: contextMenuRepeater.model
+        property int row: -1
+        property int column: -1
 
+        Repeater {
+            id: contextMenuRepeater
+            MenuItem {
+                id: menuItem
+                text: modelData
+                onTriggered: spreadSheetModel.contextMenuAction(contextMenu.row, contextMenu.column, modelData)
+                Component.onCompleted: if (menuItem.width>contextMenu.width) contextMenu.width = menuItem.width
+            }
+        }
 
     }
 
     Connections {
         target: spreadSheetModel
         onPopupContextMenu: {
-            print("Pop up context menu")
+            contextMenu.contextMenuList = menuList
+            contextMenu.row = rowIndex
+            contextMenu.column = columnIndex
             contextMenu.popup()
         }
     }

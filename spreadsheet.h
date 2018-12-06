@@ -43,11 +43,12 @@ public:
     QList<bool> resizableColumnList() const;
     QList<bool> sortEnabledColumnList() const;
 
+
 signals:
 
     void columnListChanged();
     void tableColumnCountChanged();
-    void popupContextMenu();
+    void popupContextMenu(int rowIndex, int columnIndex, QStringList menuList);
 
 public slots:
 
@@ -56,6 +57,7 @@ public slots:
     virtual void requestTextChange(int rowIndex, int columnIndex, const QString& text);
     virtual void requestAction(int rowIndex, int columnIndex);
     virtual void sortByColumn(int index, bool asc);
+    virtual void contextMenuAction(int rowIndex, int columnIndex, int menuIndex);
     void requestContextMenu(int rowIndex, int columnIndex);
     void selectRow(int index);
     void selectRowRange(int startIndex, int endIndex);
@@ -89,7 +91,7 @@ protected:
     int leftColumnCount() const { return _leftColumnCount; }
     int tableColumnCount() const { return _columnCount; }
 
-    bool rowSelected(int index) const { return _selectedRowSet.contains(index); }
+    QSet<int> selectedRowSet() const { return _selectedRowSet; }
 
 
 private:
