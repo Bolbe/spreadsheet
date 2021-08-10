@@ -1,6 +1,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.1
+import QtQml 2.12
 
 
 FocusScope {
@@ -325,7 +326,7 @@ FocusScope {
                 id: menuItem
                 text: modelData
                 onTriggered: spreadSheetModel.contextMenuAction(contextMenu.row, contextMenu.column, modelData)
-                Component.onCompleted: if (menuItem.width>contextMenu.width) contextMenu.width = menuItem.width
+                Component.onCompleted: if (menuItem.implicitWidth>contextMenu.width) contextMenu.width = menuItem.implicitWidth
             }
         }
 
@@ -334,6 +335,7 @@ FocusScope {
     Connections {
         target: spreadSheetModel
         onPopupContextMenu: {
+            contextMenu.width = 100
             contextMenu.contextMenuList = menuList
             contextMenu.row = rowIndex
             contextMenu.column = columnIndex
