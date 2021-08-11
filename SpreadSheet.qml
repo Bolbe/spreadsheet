@@ -336,6 +336,7 @@ FocusScope {
         target: spreadSheetModel
         onPopupContextMenu: {
             contextMenu.width = 100
+            contextMenu.contextMenuList = []
             contextMenu.contextMenuList = menuList
             contextMenu.row = rowIndex
             contextMenu.column = columnIndex
