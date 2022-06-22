@@ -80,14 +80,14 @@ ListView {
                             }
                         }
 
-                        onPressed: {
+                        onPressed: function(mouse) {
                             if (mouse.button === Qt.RightButton) {
                                 spreadSheetModel.requestContextMenu(listViewIndex, index+firstIndex)
 
                             }
                         }
 
-                        onClicked: {
+                        onClicked: function(mouse) {
                             if (mouse.button === Qt.RightButton) return
                             if (mouse.button === Qt.LeftButton) {
                                 if (mouse.modifiers & Qt.ControlModifier) {
@@ -117,7 +117,7 @@ ListView {
                             }
                         }
 
-                        onDoubleClicked: {
+                        onDoubleClicked: function(mouse) {
                             if (mouse.button === Qt.RightButton) return
                             if (actionList[index+firstIndex]) {
                                 spreadSheetModel.requestAction(listViewIndex, index+firstIndex)
@@ -194,7 +194,7 @@ ListView {
         anchors.fill: parent
         propagateComposedEvents: true
 
-        onPressed: {
+        onPressed: function(mouse) {
             spreadSheet.abortEditor()
             mouse.accepted = false
             spreadSheetTable.forceActiveFocus()

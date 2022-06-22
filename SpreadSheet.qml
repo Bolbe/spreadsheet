@@ -84,7 +84,9 @@ FocusScope {
             sortEnabledColumnList: spreadSheetModel.sortEnabledColumnList.slice(0, spreadSheetModel.leftColumnCount)
             model: spreadSheetModel.columnNameList.slice(0, spreadSheetModel.leftColumnCount)
             height: spreadSheet.headerHeight
-            onSortByColumn: spreadSheetModel.sortByColumn(index, asc)
+            onSortByColumn: function(index, asc) {
+                spreadSheetModel.sortByColumn(index, asc)
+            }
             boundsBehavior: scrollOvershoot?Flickable.DragAndOvershootBounds:Flickable.StopAtBounds
         }
 
@@ -122,7 +124,9 @@ FocusScope {
             columnWidthList: spreadSheetModel.columnWidthList.slice(0, spreadSheetModel.leftColumnCount)
             resizableColumnList: spreadSheetModel.resizableColumnList.slice(0, spreadSheetModel.leftColumnCount)
 
-            onWidthChangeRequest: spreadSheetModel.setColumnWidth(index, width/spreadSheet.fontSize)
+            onWidthChangeRequest: function(index, width) {
+                spreadSheetModel.setColumnWidth(index, width/spreadSheet.fontSize)
+            }
         }
 
     }
@@ -148,7 +152,9 @@ FocusScope {
             sortEnabledColumnList: spreadSheetModel.sortEnabledColumnList.slice(spreadSheetModel.leftColumnCount)
             height: spreadSheet.headerHeight
             model: spreadSheetModel.columnNameList.slice(spreadSheetModel.leftColumnCount)
-            onSortByColumn: spreadSheetModel.sortByColumn(index+spreadSheetModel.leftColumnCount, asc)
+            onSortByColumn: function(index, asc) {
+                spreadSheetModel.sortByColumn(index+spreadSheetModel.leftColumnCount, asc)
+            }
             onContentXChanged: {
                 if (rightHeaderRow.movingHorizontally) rightTable.contentX = rightHeaderRow.contentX
             }
@@ -214,7 +220,7 @@ FocusScope {
             columnWidthList: spreadSheetModel.columnWidthList.slice(spreadSheetModel.leftColumnCount)
             resizableColumnList: spreadSheetModel.resizableColumnList.slice(spreadSheetModel.leftColumnCount)
 
-            onWidthChangeRequest: {
+            onWidthChangeRequest: function(index, width) {
                 var xcontent = rightTable.contentX
                 spreadSheetModel.setColumnWidth(index+spreadSheetModel.leftColumnCount, width/spreadSheet.fontSize)
                 rightTable.contentX = xcontent
@@ -334,7 +340,7 @@ FocusScope {
 
     Connections {
         target: spreadSheetModel
-        onPopupContextMenu: {
+        function onPopupContextMenu(rowIndex, columnIndex, menuList) {
             contextMenu.width = 100
             contextMenu.contextMenuList = []
             contextMenu.contextMenuList = menuList

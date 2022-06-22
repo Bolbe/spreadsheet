@@ -22,7 +22,7 @@ MouseArea {
 
     signal widthChangeRequest(int index, int width)
 
-    onPressed: {
+    onPressed: function(mouse) {
         for (var i=0; i<columnWidthSum.length; i++) {
             if (headerMouseArea.mouseX+xShift>columnWidthSum[i]-6
                     && headerMouseArea.mouseX+xShift<columnWidthSum[i]+6
@@ -52,7 +52,7 @@ MouseArea {
 
     }
 
-    onMouseXChanged: {
+    onMouseXChanged: function(mouse) {
         headerMouseArea.cursorShape = Qt.ArrowCursor
         for (var i=0; i<columnWidthSum.length; i++) {
             if (headerMouseArea.mouseX+xShift>columnWidthSum[i]-6
